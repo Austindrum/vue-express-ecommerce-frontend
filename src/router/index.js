@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound'
 import Products from '../views/Products'
+import Cart from '../views/Cart'
 
 
 Vue.use(VueRouter)
@@ -18,6 +19,11 @@ const routes = [
     component: Products
   },
   {
+    path: "/cart",
+    name: "cart",
+    component: Cart
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound
@@ -30,6 +36,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  linkExactActiveClass: 'active',
   routes
 })
 
