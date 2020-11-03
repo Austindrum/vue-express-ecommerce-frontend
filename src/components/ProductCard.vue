@@ -5,7 +5,10 @@
             <h5 class="card-title">{{ product.name }}</h5>
             <p class="card-text">${{ product.price }}</p>
             <router-link to="" class="btn btn-success">商品資訊</router-link>
-            <button class="btn btn-primary ml-2" @click.prevent="addToCart('+', product, 1)">放入購物車</button>
+            <button class="btn btn-primary ml-2" @click.prevent="addToCart('+', product, 1)" :disabled="isInCart">
+                <span v-if="isInCart">已放入購物車</span>
+                <span v-else>放入購物車</span>
+            </button>
         </div>
     </div>
 </template>
@@ -20,7 +23,13 @@ export default {
     },
     data() {
         return {
-            product: this.initialProduct
+            product: this.initialProduct,
+            // isInCart: false
+        }
+    },
+    computed: {
+        isInCart(){
+            return this.$store.state.cartItems.map(item=> item.product.id).includes(this.product.id);
         }
     },
     methods: {

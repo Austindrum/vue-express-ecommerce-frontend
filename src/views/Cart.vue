@@ -1,6 +1,9 @@
 <template>
     <div>
-        <div class="card mb-3" v-for="item in cartItems" :key="item.id">
+        <div v-if="cartItems.length < 1">
+            <h1>No Cart Item</h1>
+        </div>
+        <div v-else class="card mb-3" v-for="item in cartItems" :key="item.id">
             <div class="row no-gutters">
                 <div class="col-md-2">
                     <img :src="item.product.image" class="card-img" alt="...">
@@ -16,8 +19,8 @@
                     <div>
                         <button 
                             @click.stop.prevent="editCartItems('-', item.product, 1), item.quantity--" 
-                            :disabled="item.quantity === 1">-</button>
-                        <input 
+                            :disabled="item.quantity < 1 || item.quantity === 1">-</button>
+                        <input
                             @change.stop.prevent="editCartItems('inp', item.product, $event), item.quantity = $event.target.value" 
                             type="number" 
                             :value="item.quantity">
@@ -26,7 +29,7 @@
                         <span>${{ item.product.price * item.quantity }}</span>
                     </div>
                     <div>
-                        <button @click.stop.prevent="deleteItem(item.product.id)">Delete</button>
+                        <button @click.stop.prevent="deleteCartItem(item.product.id)">Delete</button>
                     </div>
                 </div>
             </div>
@@ -48,15 +51,17 @@ export default {
     },
     methods: {
         editCartItems(status, product, quantity = 1){
-            if(status === "inp") quantity = parseInt(quantity.target.value);
+            if(status === "inp"){
+                if(quantity.target.value === "" || parseInt(quantity.target.value) === 0){
+                    return quantity.target.value = 1;
+                }
+                quantity = parseInt(quantity.target.value);
+            }
             return this.$store.commit({ type: "setCartItems", status, product, quantity });
         },
         deleteCartItem(id){
             return this.$store.commit({ type: "deleteItem", id });
         }
-    },
-    created() {
-        this.getCartItems();
     },
 }
 </script>
