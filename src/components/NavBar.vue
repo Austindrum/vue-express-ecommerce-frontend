@@ -10,7 +10,7 @@
                     <router-link class="nav-link" to="/">Home</router-link>
                 </li>
                 <li class="nav-item">
-                    <router-link class="nav-link" to="/cart">Cart</router-link>
+                    <router-link class="nav-link" to="/cart">Cart-<span>{{ getCartItemsNum }}</span></router-link>
                 </li>
             </ul>
         </div>
@@ -21,9 +21,14 @@
 export default {
     data() {
         return {
-            
+
         }
     },
+    computed: {
+        getCartItemsNum(){
+            return this.$store.state.cartItems.length;
+        }
+    }
 }
 </script>
 
