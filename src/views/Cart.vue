@@ -1,38 +1,47 @@
 <template>
-    <div>
-        <div v-if="cartItems.length < 1">
-            <h1>No Cart Item</h1>
-        </div>
-        <div v-else class="card mb-3" v-for="item in cartItems" :key="item.id">
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img :src="item.product.image" class="card-img" alt="...">
-                </div>
-                <div class="col-md-6">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.product.name }}</h5>
-                        <p class="card-text">{{ item.product.description }}</p>
-                        <p class="card-text"><small class="text-muted">{{ item.product.createdAt }}</small></p>
+    <div class="row">
+        <div class="col-md-7">
+            <div v-if="cartItems.length < 1">
+                <h1>No Cart Item</h1>
+            </div>
+            <div v-else class="card mb-3" v-for="item in cartItems" :key="item.product.id">
+                <div class="row no-gutters">
+                    <div class="col-md-2">
+                        <img :src="item.product.image" class="card-img" alt="...">
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <button 
-                            @click.stop.prevent="editCartItems('-', item.product, 1), item.quantity--" 
-                            :disabled="item.quantity < 1 || item.quantity === 1">-</button>
-                        <input
-                            @change.stop.prevent="editCartItems('inp', item.product, $event), item.quantity = $event.target.value" 
-                            type="number" 
-                            :value="item.quantity">
-                        <button 
-                            @click.stop.prevent="editCartItems('+', item.product, 1), item.quantity++">+</button>
-                        <span>${{ item.product.price * item.quantity }}</span>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.product.name }}</h5>
+                            <p class="card-text">{{ item.product.description }}</p>
+                            <p class="card-text"><small class="text-muted">{{ item.product.createdAt }}</small></p>
+                        </div>
                     </div>
-                    <div>
-                        <button @click.stop.prevent="deleteCartItem(item.product.id)">Delete</button>
+                    <div class="col-md-4">
+                        <div>
+                            <button 
+                                @click.stop.prevent="editCartItems('-', item.product, 1), item.quantity--" 
+                                :disabled="item.quantity < 1 || item.quantity === 1">-</button>
+                            <input
+                                @change.stop.prevent="editCartItems('inp', item.product, $event), item.quantity = $event.target.value" 
+                                type="number" 
+                                :value="item.quantity">
+                            <button 
+                                @click.stop.prevent="editCartItems('+', item.product, 1), item.quantity++">+</button>
+                            <span>${{ item.product.price * item.quantity }}</span>
+                        </div>
+                        <div>
+                            <button @click.stop.prevent="deleteCartItem(item.product.id)">Delete</button>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-5 card">
+            <div v-for="item in cartItems" :key="item.product.id">
+                {{ item.product.name }} * {{ item.quantity }} = {{ item.product.price * item.quantity }}
+            </div>
+            <hr>
+            Total: {{ totalPrice }} 
         </div>
     </div>
 </template>
@@ -48,6 +57,18 @@ export default {
         cartItems(){
             return this.$store.state.cartItems;
         },
+        totalPrice(){
+            // console.log(this.$store.state.cartItems);
+            // this.$store.state.cartItems.forEach(item => {
+            //     console.log(item.product.price * item.quantity);
+            // });
+            // return false;
+            let total = this.$store.state.cartItems.reduce((current, next)=>{
+                console.log(current.product.price, next.product.price);
+                return current.product.price * current.quantity + next.product.price * next.quantity;
+            })
+            return total;
+        }
     },
     methods: {
         editCartItems(status, product, quantity = 1){
