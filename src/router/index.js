@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound'
 import Products from '../views/Products'
 import Cart from '../views/Cart'
-
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -38,6 +38,14 @@ const routes = [
 const router = new VueRouter({
   linkExactActiveClass: 'active',
   routes
+})
+
+router.beforeEach( async (to, from, next) => {
+    // console.log("to", to);
+    // console.log("from", from);
+    to, from
+    store.dispatch("fetchCurrentUser");
+    next();
 })
 
 export default router

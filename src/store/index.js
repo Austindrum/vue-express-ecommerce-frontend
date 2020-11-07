@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import adminUserAPI from '../apis/admin/auth'
 
 Vue.use(Vuex)
 
@@ -9,6 +10,15 @@ const SET_LOCALSTORAGE = (value) => localStorage.setItem("austin_ecommerce", val
 export default new Vuex.Store({
   state: { 
     cartItems: JSON.parse(GET_LOCALSTORAGE()) === null ? 0 : JSON.parse(GET_LOCALSTORAGE()),
+    currentUser: {
+      id: '',
+      name: '',
+      email: '',
+      address: '',
+      role: ''
+    },
+    isLogin: false,
+    token: ''
   },
   mutations: {
     setCartItems(state, payload){
@@ -52,10 +62,49 @@ export default new Vuex.Store({
       });
       SET_LOCALSTORAGE(JSON.stringify(temp));
       state.cartItems = temp;
+    },
+    setCurrentUser (state, payload) {
+      state.currentUser = {
+        id: payload.user.id,
+        name: payload.user.name,
+        email: payload.user.email,
+        address: payload.user.address,
+        tel: payload.user.tel,
+        role: payload.user.role
+      }
+      state.isLogin = true
+      state.token = payload.token
+    },
+    logout(state){
+      state.currentUser = {};
+      state.isLogin = false;
+      state.token = "";
+      localStorage.removeItem("austin_token");
     }
   },
   actions: {
-
+    async fetchCurrentUser({commit}){
+      try {
+        const { data, statusText } = await adminUserAPI.getCurrentUser();
+        if(statusText === 'OK' && data.status === "success"){
+          // throw new Error(`statusText: ${statusText}, ${data.mesage}`);
+          const user = {
+            id: data.user.id,
+            name: data.user.name,
+            email: data.user.email,
+            address: data.user.address,
+            tel: data.user.tel,
+            role: data.user.role
+          }
+          commit({
+            type: 'setCurrentUser', 
+            user
+          })
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
   },
   modules: {
   

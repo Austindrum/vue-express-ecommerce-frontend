@@ -12,23 +12,43 @@
                 <li class="nav-item">
                     <router-link class="nav-link" to="/cart">Cart-<span>{{ getCartItemsNum }}</span></router-link>
                 </li>
+                <li v-if="isLogin">
+                    <button class="btn btn-primary" @click.stop.prevent="logout">Logout</button>
+                </li>
+                <template v-else>
+                    <Signin/>
+                    <Signup/>
+                </template>
             </ul>
         </div>
     </nav>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import Signin from './Signin';
+import Signup from './Signup';
 export default {
     data() {
         return {
 
         }
     },
+    components: {
+        Signin,
+        Signup
+    },
     computed: {
         getCartItemsNum(){
             return this.$store.state.cartItems.length;
+        },
+        ...mapState(['currentUser', 'isLogin'])
+    },
+    methods: {
+        logout(){
+            this.$store.commit('logout');
         }
-    }
+    },
 }
 </script>
 

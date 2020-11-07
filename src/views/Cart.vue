@@ -37,6 +37,7 @@
             </div>
         </div>
         <div class="col-md-5 card">
+            <button>Login</button>
             <div v-for="item in cartItems" :key="item.product.id">
                 {{ item.product.name }} * {{ item.quantity }} = {{ item.product.price * item.quantity }}
             </div>
@@ -58,15 +59,10 @@ export default {
             return this.$store.state.cartItems;
         },
         totalPrice(){
-            // console.log(this.$store.state.cartItems);
-            // this.$store.state.cartItems.forEach(item => {
-            //     console.log(item.product.price * item.quantity);
-            // });
-            // return false;
-            let total = this.$store.state.cartItems.reduce((current, next)=>{
-                console.log(current.product.price, next.product.price);
-                return current.product.price * current.quantity + next.product.price * next.quantity;
-            })
+            let total = 0;
+            this.$store.state.cartItems.forEach(item => {
+                total += item.product.price * item.quantity;
+            });
             return total;
         }
     },
