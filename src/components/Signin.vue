@@ -1,9 +1,9 @@
 <template>
     <div>
-        <button class="btn btn-sm btn-primary" type="button" data-toggle="modal" data-target="#sign-in-modal">
+        <!-- <button class="btn btn-sm btn-primary" type="button" data-toggle="modal" data-target="#sign-in-modal">
             Signin
-        </button>
-        <div class="modal fade" id="sign-in-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        </button> -->
+        <div class="modal fade" id="sign-in-modal" tabindex="-1" aria-labelledby="sign-in-modal" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                    <div class="modal-header">
@@ -33,7 +33,8 @@
                                 class="form-control"
                                 :class="{ 'is-invalid' : passwordErr }"
                                 v-model="password"
-                                placeholder="12345678">
+                                placeholder="12345678"
+                                autocomplete="on">
                                 <div v-if="passwordErr" class="invalid-feedback">
                                     {{ passwordErr }}
                                 </div>

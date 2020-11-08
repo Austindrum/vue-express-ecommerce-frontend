@@ -15,6 +15,7 @@ export default new Vuex.Store({
       name: '',
       email: '',
       address: '',
+      avatar: '',
       role: ''
     },
     isLogin: false,
@@ -70,10 +71,11 @@ export default new Vuex.Store({
         email: payload.user.email,
         address: payload.user.address,
         tel: payload.user.tel,
-        role: payload.user.role
+        avatar: payload.user.avatar,
+        role: payload.user.role,
       }
       state.isLogin = true
-      state.token = payload.token
+      state.token = localStorage.getItem("austin_token")
     },
     logout(state){
       state.currentUser = {};
@@ -94,6 +96,7 @@ export default new Vuex.Store({
             email: data.user.email,
             address: data.user.address,
             tel: data.user.tel,
+            avatar: data.user.avatar,
             role: data.user.role
           }
           commit({

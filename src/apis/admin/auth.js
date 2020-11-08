@@ -8,6 +8,11 @@ export default {
     signin(data){
         return apiHelper.post(`admin/signin`, data);
     },
+    putUser (usertId, formData) {
+        return apiHelper.put(`/admin/user/${usertId}`, formData, {
+            headers: { Authorization: `Bearer ${getToken()}` }
+        })
+    },
     getCurrentUser(){
         return apiHelper.get(`/get_current_user`, {
             headers: { Authorization: `Bearer ${getToken()}` }

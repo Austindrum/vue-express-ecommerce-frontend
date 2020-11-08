@@ -37,7 +37,22 @@
             </div>
         </div>
         <div class="col-md-5 card">
-            <button>Login</button>
+            <template v-if="isLogin">
+                <div>
+                    <h3>User Information</h3>
+                    <div>
+                        Name: {{ currentUser.name }}<br/>
+                        Email: {{ currentUser.email }}<br/>
+                        Tel: {{ currentUser.tel }}<br/>
+                        Address: {{ currentUser.address }}<br/>
+                    </div>
+                    <button>Save cart</button>
+                    <button>Payment</button>
+                </div>
+            </template>
+            <template v-else>
+                <button @click.stop.prevent="openLogin">Login</button>
+            </template>
             <div v-for="item in cartItems" :key="item.product.id">
                 {{ item.product.name }} * {{ item.quantity }} = {{ item.product.price * item.quantity }}
             </div>
@@ -48,6 +63,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import $ from 'jquery';
 export default {
     data() {
         return {
@@ -55,6 +72,10 @@ export default {
         }
     },
     computed: {
+        ...mapState([
+            'isLogin',
+            'currentUser'
+        ]),
         cartItems(){
             return this.$store.state.cartItems;
         },
@@ -64,7 +85,7 @@ export default {
                 total += item.product.price * item.quantity;
             });
             return total;
-        }
+        },
     },
     methods: {
         editCartItems(status, product, quantity = 1){
@@ -78,6 +99,9 @@ export default {
         },
         deleteCartItem(id){
             return this.$store.commit({ type: "deleteItem", id });
+        },
+        openLogin(){
+            $('#sign-in-modal').modal('show');
         }
     },
 }

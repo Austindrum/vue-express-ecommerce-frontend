@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import NotFound from '../views/NotFound'
 import Products from '../views/Products'
 import Cart from '../views/Cart'
+import Profile from '../views/Profile'
 import store from '../store'
 
 Vue.use(VueRouter)
@@ -24,15 +25,18 @@ const routes = [
     component: Cart
   },
   {
+    path: "/profile",
+    name: "profile",
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound
   },
-  // {
-  //   path: '/about',
-  //   name: 'About',
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
 ]
 
 const router = new VueRouter({
@@ -41,11 +45,21 @@ const router = new VueRouter({
 })
 
 router.beforeEach( async (to, from, next) => {
-    // console.log("to", to);
-    // console.log("from", from);
-    to, from
+    from
     store.dispatch("fetchCurrentUser");
-    next();
+    if(to.matched.some(record => {
+      return record.meta.requiresAuth;
+    })){
+      if(store.state.token === ""){
+        next({
+          path: '/products'
+        })
+      }else{
+        next();
+      }
+    }else{
+      next();
+    }
 })
 
 export default router

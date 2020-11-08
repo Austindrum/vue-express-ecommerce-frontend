@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button class="btn btn-sm btn-primary" type="button" data-toggle="modal" data-target="#sign-up-modal">
+        <!-- <button class="btn btn-sm btn-primary" type="button" data-toggle="modal" data-target="#sign-up-modal">
             Signup
-        </button>
+        </button> -->
         <div class="modal fade" id="sign-up-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -45,7 +45,8 @@
                                 class="form-control"
                                 :class="{ 'is-invalid' : passwordErr }"
                                 v-model="password"
-                                placeholder="12345678">
+                                placeholder="12345678"
+                                autocomplete="on">
                                 <div v-if="passwordErr" class="invalid-feedback">
                                     {{ passwordErr }}
                                 </div>
@@ -57,7 +58,8 @@
                                 class="form-control"
                                 :class="{ 'is-invalid' : confirmPasswordErr}"
                                 v-model="confirmPassword"
-                                placeholder="12345678">
+                                placeholder="12345678"
+                                autocomplete="on">
                                 <div v-if="confirmPasswordErr" class="invalid-feedback">
                                     {{ confirmPasswordErr }}
                                 </div>
