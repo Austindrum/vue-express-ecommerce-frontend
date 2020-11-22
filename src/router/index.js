@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Home from '../views/Home'
 import NotFound from '../views/NotFound'
 import Products from '../views/Products'
 import Cart from '../views/Cart'
@@ -14,7 +15,12 @@ const routes = [
   {
     path: "/",
     name: "root",
-    redirect: "/products"
+    redirect: "/home"
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: Home
   },
   {
     path: "/products",

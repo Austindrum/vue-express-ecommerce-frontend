@@ -55,15 +55,6 @@ export default {
     line-height: 1;
     text-shadow: 3px 3px 0 #f1f1f1, 4px 4px 0 #f1f1f1;
 }
-.btn{
-    display: inline-block;
-    background-color: #fc7c7c;
-    padding: 1.2rem 4rem;
-    color: #fff;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-top: 3rem;
-}
 @media only screen and (max-width: 1200px){
     .hero-img{
         right: -20%;

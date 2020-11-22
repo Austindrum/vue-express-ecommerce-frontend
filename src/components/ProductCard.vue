@@ -4,7 +4,12 @@
             <img :src="product.image" alt="product">
             <ul class="icons">
                 <span><box-icon name='heart'></box-icon></span>
-                <span><box-icon name='shopping-bag' ></box-icon></span>
+                <span v-if="!isInCart" @click.prevent="addToCart(product, 1)">
+                    <box-icon name='shopping-bag'></box-icon>
+                </span>
+                <div v-else>
+                    <box-icon name='shopping-bag' type='solid' ></box-icon>
+                </div>
                 <span><box-icon name='search' ></box-icon></span>
             </ul>
         </div>
@@ -44,7 +49,6 @@ export default {
     data() {
         return {
             product: this.initialProduct,
-            // isInCart: false
         }
     },
     computed: {
@@ -53,10 +57,9 @@ export default {
         }
     },
     methods: {
-        addToCart(status, product, quantity){
+        addToCart(product, quantity){
             return this.$store.commit({
                 type: "setCartItems",
-                status,
                 product,
                 quantity
             });
@@ -73,29 +76,65 @@ export default {
     border-radius: 1rem;
     text-align: center;
     transition: all 300ms ease-in-out;
+    .product-header{
+        position: relative;
+        background-color: #f6f2f1;
+        height: 35rem;
+        transition: all 300ms ease-in-out;
+        z-index: 0;
+        img{
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            height: 100%;
+        }
+        .icons{
+            position: absolute;
+            top: 50%;
+            right: 5%;
+            transform: translate(0, -50%) scale(0);
+            z-index: 2;
+            opacity: 0;
+            transition: all 500ms ease-in-out;
+            span{
+                background-color: #fff;
+                font-size: 2.5rem;
+                display: block;
+                border-radius: 50%;
+                padding: 1.5rem 1.6rem;
+                line-height: 2rem;
+                cursor: pointer;
+                transition: all 500ms ease-in-out;
+            }
+            span:not(:last-child){
+                margin-bottom: 1rem;
+            }
+            span:hover{
+                background-color: #ff7c9c;
+            }
+            div{
+                background-color:#fff;
+                font-size: 2.5rem;
+                display: block;
+                border-radius: 50%;
+                padding: 1.5rem 1.6rem;
+                line-height: 2rem;
+                margin-bottom: 1rem;
+            }
+        }
+    }
+    .product-footer{
+        padding: 2rem 1.6rem 1.6rem 1.6rem;
+        h3{
+            font-size: 2rem;
+        }
+        .price{
+            color: #ff7c9c;
+            font-size: 2rem;
+        }
+    }
 }
 .product:hover{
     box-shadow: 0 0.5rem 1.5rem rgba(0,0,0, 0.25);
-}
-.product-header{
-    position: relative;
-    background-color: #f6f2f1;
-    height: 35rem;
-    transition: all 300ms ease-in-out;
-    z-index: 0;
-}
-.product-header img{
-    height: 100%;
-}
-.product-footer{
-    padding: 2rem 1.6rem 1.6rem 1.6rem;
-}
-.product-footer h3{
-    font-size: 2rem;
-}
-.product-footer .price{
-    color: #ff7c9c;
-    font-size: 2rem;
 }
 .product:hover .product-header::after{
     content: "";
@@ -108,31 +147,6 @@ export default {
     background-color: rgba(0,0,0, 0.5);
     z-index: 1;
     transition: all 500ms ease-in-out;
-}
-.product-header .icons{
-    position: absolute;
-    top: 50%;
-    right: 5%;
-    transform: translate(0, -50%) scale(0);
-    z-index: 2;
-    opacity: 0;
-    transition: all 500ms ease-in-out;
-}
-.product-header .icons span{
-    background-color: #fff;
-    font-size: 2.5rem;
-    display: block;
-    border-radius: 50%;
-    padding: 1.5rem 1.6rem;
-    line-height: 2rem;
-    cursor: pointer;
-    transition: all 500ms ease-in-out;
-}
-.product-header .icons span:not(:last-child){
-    margin-bottom: 1rem;
-}
-.product-header .icons span:hover{
-    background-color: #ff7c9c;
 }
 .product:hover .icons{
     opacity: 1;

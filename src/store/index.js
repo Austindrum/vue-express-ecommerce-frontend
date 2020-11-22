@@ -24,26 +24,11 @@ export default new Vuex.Store({
   mutations: {
     setCartItems(state, payload){
       let cartItems = JSON.parse(GET_LOCALSTORAGE()) || [];
-      let isExsit = cartItems.map(item => item.product.id).includes(payload.product.id);
-      if(isExsit){
-        if(payload.status === "-"){
-          cartItems.map(item => {
-            if(item.product.id === payload.product.id) return item.quantity--;
-            return item;
-          })
-        }
-        if(payload.status === "+"){
-          cartItems.map(item => {
-            if(item.product.id === payload.product.id) return item.quantity++;
-            return item;
-          })
-        }
-        if(payload.status === "inp"){
-          cartItems.map(item => {
-            if(item.product.id === payload.product.id) return item.quantity = parseInt(payload.quantity);
-            return item;
-          })
-        }
+      if(cartItems.map(item => item.product.id).includes(payload.product.id)){
+        cartItems.map(item => {
+          if(item.product.id === payload.product.id) return item.quantity = parseInt(payload.quantity);
+          return item;
+        })
       }else{
           cartItems.push({ 
             product: payload.product, 

@@ -1,27 +1,27 @@
 <template>
   <div id="app">
-    <header id="home" class="header">
+    <!-- <header id="home" class="header">
       <Navbar/>
       <Hero/>
     </header>
-    <main>
+    <main> -->
       <!-- <Signin/>
       <Signup/> -->
       <router-view/>
-    </main>
+    <!-- </main> -->
   </div>
 </template>
 <script>
 // import 'bootstrap';
 // import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from './components/NavBar';
-import Hero from './components/Hero'
+// import Navbar from './components/NavBar';
+// import Hero from './components/Hero'
 // import Signin from './components/Signin';
 // import Signup from './components/Signup';
 export default {
   components: {
-    Navbar,
-    Hero,
+    // Navbar,
+    // Hero,
 
     // Signin,
     // Signup,
@@ -45,7 +45,7 @@ body{
   font-family: 'Poppins', sans-serif;
   font-size: 1.6rem;
   font-weight: 400;
-  background-color: #fff;
+  background-color: #F0F8FF;
   color: #243a6f;
   position: relative;
   z-index: 1;
@@ -71,31 +71,22 @@ li{
   max-width: 100rem;
   margin: 0 auto;
 }
-
+.btn{
+    display: inline-block;
+    background-color: #fc7c7c;
+    padding: 1.2rem 4rem;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 3rem;
+    border-radius: 1rem;
+}
 @media only screen and (max-width: 1200px){
   .container{
     padding: 0 3rem;
   }
   .container-md{
     padding: 0 3rem;
-  }
-}
-
-.header{
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  background-color: #d1e2e9;
-  overflow: hidden;
-}
-@media only screen and (max-width: 996px){
-  .header{
-    min-height: 70vh;
-  }
-}
-@media only screen and (max-width: 567px){
-  .header{
-    min-height: 100vh;
   }
 }
 </style>

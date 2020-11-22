@@ -34,7 +34,9 @@
                     </li>
                     <li class="nav-item">
                         <router-link class="nav-link icon" to="/cart">
-                            <box-icon type='solid' name='cart'></box-icon>
+                            <box-icon 
+                            size="lg"
+                            name='cart'></box-icon>
                         </router-link>
                     </li>
                 </ul>
@@ -122,7 +124,7 @@ export default {
         },
     },
     mounted(){
-        gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
+        // gsap.from(".logo", { opacity: 0, duration: 1, delay: 0.5, y: -10 });
         gsap.from(".hamburger", { opacity: 0, duration: 1, delay: 0.8, x: 20 });
         const navBar = document.querySelector('.nav');
         const navHeight = navBar.getBoundingClientRect().height;
