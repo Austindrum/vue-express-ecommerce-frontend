@@ -9,7 +9,7 @@ const SET_LOCALSTORAGE = (value) => localStorage.setItem("austin_ecommerce", val
 
 export default new Vuex.Store({
   state: { 
-    cartItems: JSON.parse(GET_LOCALSTORAGE()) === null ? 0 : JSON.parse(GET_LOCALSTORAGE()),
+    cartItems: JSON.parse(GET_LOCALSTORAGE()) === null ? [] : JSON.parse(GET_LOCALSTORAGE()),
     currentUser: {
       id: '',
       name: '',
@@ -52,6 +52,10 @@ export default new Vuex.Store({
       }
       SET_LOCALSTORAGE(JSON.stringify(cartItems));
       state.cartItems = cartItems === null ? 0 : cartItems;
+    },
+    clearCartItems(state){
+      state.cartItems = [];
+      localStorage.removeItem("austin_ecommerce");
     },
     deleteItem(state, payload){
       let cartItems = JSON.parse(GET_LOCALSTORAGE());

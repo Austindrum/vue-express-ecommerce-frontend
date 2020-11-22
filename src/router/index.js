@@ -5,6 +5,8 @@ import Products from '../views/Products'
 import Cart from '../views/Cart'
 import Profile from '../views/Profile'
 import store from '../store'
+import Order from '../views/Order'
+import Payment from '../views/Payment'
 
 Vue.use(VueRouter)
 
@@ -33,6 +35,22 @@ const routes = [
     }
   },
   {
+    path: "/order/:cartId",
+    name: "order",
+    component: Order,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/payment/:orderId",
+    name: "payment",
+    component: Payment,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '*',
     name: 'not-found',
     component: NotFound
@@ -40,7 +58,7 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  linkExactActiveClass: 'active',
+  // linkExactActiveClass: 'active',
   routes
 })
 

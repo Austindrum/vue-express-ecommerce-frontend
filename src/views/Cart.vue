@@ -46,8 +46,8 @@
                         Tel: {{ currentUser.tel }}<br/>
                         Address: {{ currentUser.address }}<br/>
                     </div>
-                    <button>Save cart</button>
-                    <button>Payment</button>
+                    <button @click.stop.prevent="saveCart" class="btn btn-primary btn-sm">Save cart</button>
+                    <!-- <router-link :to="{name:'order', params:{ cartId: 'local' }}" class="btn btn-success btn-sm">Order</router-link> -->
                 </div>
             </template>
             <template v-else>
@@ -63,6 +63,7 @@
 </template>
 
 <script>
+import cartAPI from '../apis/carts';
 import { mapState } from 'vuex';
 import $ from 'jquery';
 export default {
@@ -90,7 +91,7 @@ export default {
     methods: {
         editCartItems(status, product, quantity = 1){
             if(status === "inp"){
-                if(quantity.target.value === "" || parseInt(quantity.target.value) === 0){
+                if(quantity.target.value === "" || parseInt(quantity.target.value) === 0 || parseInt(quantity.target.value) < 0){
                     return quantity.target.value = 1;
                 }
                 quantity = parseInt(quantity.target.value);
@@ -102,6 +103,29 @@ export default {
         },
         openLogin(){
             $('#sign-in-modal').modal('show');
+        },
+        async saveCart(){
+            try {
+                const vm = this;
+                if(!vm.currentUser){
+                    return vm.$router.push("/");
+                }
+                if(vm.cartItems.length === 0){
+                    return vm.$router.push("/");
+                }
+                const cartInfo = {
+                    cart: vm.cartItems,
+                    user: vm.currentUser
+                }
+                const { statusText, data } = await cartAPI.postCart(cartInfo);
+                if(statusText !== 'OK' || data.status !== 'success'){
+                    throw new Error(statusText);
+                }
+                this.$store.commit("clearCartItems");
+                this.$router.push("/profile");
+            } catch (err) {
+                console.log(err);
+            }
         }
     },
 }

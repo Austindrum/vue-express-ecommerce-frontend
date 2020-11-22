@@ -70,20 +70,71 @@
                                         <button type="submit" class="btn btn-primary">Edit</button>
                                     </form>
                                 </div>
-                                <!-- <div class="modal-footer">
-                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-7">
-                    <h4>All Carts</h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="border-bottom">Padding</h5>
+                    <h4>Store Carts</h4>
+                    <div v-for="(cart, key) in userCarts" :key="key" class="card mb-3">
+                        <div class="card-body row">
+                            <div class="col-md-8">
+                                <h5 class="card-title">
+                                    <a href="#" data-toggle="modal" :data-target="`#cart${key}`">Card {{key}}</a>
+                                </h5>
+                            </div>
+                            <div class="col-md-4">
+                                <button @click.stop.prevent="deleteUserCart(cart[0].CartItem.CartId)" class="btn btn-danger btn-sm ml-1">Delete</button>
+                                <button 
+                                v-if="cart[0].ordered"
+                                @click.stop.prevent="toPage(cart[0].orderId)"
+                                class="btn btn-success btn-sm ml-1">Payment</button>
+                                <button 
+                                v-else
+                                @click.stop.prevent="toPage(cart[0].CartItem.CartId, user.id)"
+                                class="btn btn-primary btn-sm ml-1">Order</button>
+                                <!-- <template v-if="cart[0].ordered">
+                                    <router-link
+                                    :to="{name:'payment', params:{ orderId: cart[0].orderId }}" 
+                                    class="btn btn-success btn-sm ml-1">Payment {{ cart[0].orderId }}</router-link>
+                                </template>
+                                <template v-else>
+                                    <router-link 
+                                    :to="{name:'order', params:{ cartId: cart[0].CartItem.CartId, userId: user.id }}" 
+                                    class="btn btn-primary btn-sm ml-1">Order</router-link>
+                                </template> -->
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <h5 class="border-bottom">Payment</h5>
+                        <!-- Cart Modal -->
+                        <div class="modal fade" :id="`cart${key}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Cart {{key}} Items</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div v-for="item in cart" :key="item.id" class="card mb-1">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-2">
+                                                    <img :src="item.image" class="card-img" alt="...">
+                                                </div>
+                                                <div class="col-md-6 p-2">
+                                                    <h6 class="">{{ item.name }}</h6>
+                                                    <small class="text-muted">{{ item.createdAt }}</small>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <p>
+                                                        {{ item.price }} * {{ item.quantity }} = {{ item.price * item.quantity }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -100,13 +151,34 @@ export default {
             user: {},
             templateImg: "",
             nameErr: "",
+            userCarts: [],
         }
     },
     methods: {
+        toPage(params, user){
+            if(user){
+                this.$router.push({ name: 'order', params: { cartId: params, userId: user }})
+            }else{
+                this.$router.push({ name: 'payment', params: { orderId: params }})
+            }
+        },
         fileChange(e){
             const files = e.target.files;
             if(!files.length) return;
             this.templateImg = window.URL.createObjectURL(files[0]);
+        },
+        async deleteUserCart(cartId){
+            const vm = this;
+            try {
+                const { data, statusText } = await adminAPI.deleteUserCart(vm.user.id, cartId);
+                if(statusText !== 'OK' || data.status !== 'success'){
+                    throw new Error(statusText);
+                }
+                vm.$router.go("/profile");
+                // vm.$router.push("/profile");
+            } catch (err) {
+                console.log(err);
+            }
         },
         async userEdit(e){
             if(!this.user.name) return this.nameErr = "Enter Your Name";
@@ -128,9 +200,18 @@ export default {
         }
     },
     async created() {
+        const vm = this;
         const user = await adminAPI.getCurrentUser();
-        this.user = user.data.user;
-        this.templateImg = user.data.user.avatar
+        const { data } = await adminAPI.getUserCarts(user.data.user.id);
+        data.userCarts.forEach(async cart => {
+            if(cart[0].ordered){
+                let order = await adminAPI.getOrder(cart[0].CartItem.CartId);
+                cart[0].orderId = order.data.orderId
+            }
+        });
+        vm.userCarts = data.userCarts;
+        vm.user = user.data.user;
+        vm.templateImg = user.data.user.avatar;
     },
 }
 </script>
